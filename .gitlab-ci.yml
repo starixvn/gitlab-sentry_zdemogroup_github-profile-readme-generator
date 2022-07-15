@@ -19,6 +19,7 @@ Install Dependencies:
         - yarn.lock
     paths:
       - node_modules
+    policy: pull-push
   script:
     - yarn install
 
@@ -32,6 +33,7 @@ Test:
         - yarn.lock
     paths:
       - node_modules
+    policy: pull
   script:
     - yarn test
 
@@ -45,6 +47,7 @@ Build:
         - yarn.lock
     paths:
       - node_modules
+    policy: pull
   script:
     - yarn build
   artifacts:
