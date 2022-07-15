@@ -14,40 +14,53 @@ Install Dependencies:
   tags:
     - minio
   cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules
-    policy: pull-push
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - node_modules
+      policy: pull-push
+    - key: yarn-$CI_JOB_IMAGE
+      paths:
+        - .yarn
+      policy: pull-push
   script:
-    - yarn install
+    - yarn install --cache-folder .yarn
 
 Test:
   stage: test
   tags:
     - minio
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules
-    policy: pull
   script:
-    - yarn test
+    - yarn test --cacheDirectory ".jestcache"
+  cache:
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - node_modules
+      policy: pull
+    - key: test-$CI_JOB_IMAGE
+      paths:
+        - .jestcache
+      policy: pull-push
 
 Build:
   stage: build
   tags:
     - minio
   cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules
-    policy: pull
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - node_modules
+      policy: pull
+    - key: build-$CI_JOB_IMAGE
+      paths:
+        - .cache
+        - public
+      policy: pull-push
   script:
     - yarn build
   artifacts:
@@ -64,8 +77,8 @@ Docker Build:
   image: hub.nexdev.net/base/docker:20.10.7-bash #docker:stable
   tags:
     - minio
-  services:
-    - docker:dind
+  #services:
+  #  - docker:dind
   script:
     - docker build -t $DOCKER_REG_LOCAL_URL/base/gprg:latest .
     - docker push $DOCKER_REG_LOCAL_URL/base/gprg:latest
