@@ -11,6 +11,8 @@ default:
 
 Install Dependencies:
   stage: install_deps
+  tags:
+    - minio
   cache:
     key:
       files:
@@ -22,6 +24,8 @@ Install Dependencies:
 
 Test:
   stage: test
+  tags:
+    - minio
   cache:
     key:
       files:
@@ -33,6 +37,8 @@ Test:
 
 Build:
   stage: build
+  tags:
+    - minio
   cache:
     key:
       files:
