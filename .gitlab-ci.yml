@@ -67,5 +67,5 @@ Docker Build:
   services:
     - docker:dind
   script:
-    - docker build -t ${DOCKER_REG_LOCAL_URL}/gprg:latest .
-    - docker push ${DOCKER_REG_LOCAL_URL}/gprg:latest
+    - docker build -t $DOCKER_REG_LOCAL_URL/base/gprg:latest .
+    - docker push $DOCKER_REG_LOCAL_URL/base/gprg:latest
