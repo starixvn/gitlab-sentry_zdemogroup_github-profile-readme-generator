@@ -14,14 +14,20 @@ Install Dependencies:
   script:
     - yarn install
   when: manual
+  tags:
+    - minio
 
 Test:
   stage: test
   script:
     - yarn test
+  tags:
+    - minio
 
 Build:
   stage: build
+  tags:
+    - minio
   script:
     - yarn build
   artifacts:
@@ -36,6 +42,8 @@ Docker Build:
 
   stage: package
   image: docker:stable
+  tags:
+    - minio
   services:
     - docker:dind
   script:
