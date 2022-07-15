@@ -11,23 +11,34 @@ default:
 
 Install Dependencies:
   stage: install_deps
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules
   script:
     - yarn install
-  when: manual
-  tags:
-    - minio
 
 Test:
   stage: test
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules
   script:
     - yarn test
-  tags:
-    - minio
 
 Build:
   stage: build
-  tags:
-    - minio
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules
   script:
     - yarn build
   artifacts:
@@ -36,7 +47,7 @@ Build:
 
 Docker Build:
   before_script:
-    # to skip default before_script
+    # to skip default before_script###
     - docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
