@@ -56,7 +56,7 @@ Build:
 
 Docker Build:
   before_script:
-    # to skip default before_script#############
+    # to skip default before_script###############
     - docker info
     - docker login -u $DOCKER_REG_LOCAL_USERNAME -p $DOCKER_REG_LOCAL_PASSWORD $DOCKER_REG_LOCAL_URL
 
