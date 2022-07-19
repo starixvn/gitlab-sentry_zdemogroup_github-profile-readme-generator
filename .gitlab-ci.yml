@@ -9,60 +9,58 @@ default:
   before_script:
     - yarn install
 
+# Caches
+.node_modules-cache: &node_modules-cache
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - node_modules
+  policy: pull
+
+.yarn-cache: &yarn-cache
+  key: yarn-$CI_JOB_IMAGE
+  paths:
+    - .yarn
+
+.test-cache: &test-cache
+  key: test-$CI_JOB_IMAGE
+  paths:
+    - .jestcache
+  policy: pull-push
+
+.build-cache: &build-cache
+  key: build-$CI_JOB_IMAGE
+  paths:
+      - .cache
+      - public
+  policy: pull-push
+
+# Jobs
 Install Dependencies:
   stage: install_deps
-  tags:
-    - minio
-  cache:
-    - key:
-        files:
-          - yarn.lock
-      paths:
-        - node_modules
-      policy: pull-push
-    - key: yarn-$CI_JOB_IMAGE
-      paths:
-        - .yarn
-      policy: pull-push
   script:
     - yarn install --cache-folder .yarn
+  cache:
+    - <<: *node_modules-cache
+      policy: pull-push # We override the policy
+    - <<: *yarn-cache # This is not required if your internet speed is good or if you use a local npm registry. 
 
 Test:
   stage: test
-  tags:
-    - minio
   script:
     - yarn test --cacheDirectory ".jestcache"
   cache:
-    - key:
-        files:
-          - yarn.lock
-      paths:
-        - node_modules
-      policy: pull
-    - key: test-$CI_JOB_IMAGE
-      paths:
-        - .jestcache
-      policy: pull
+    - <<: *node_modules-cache
+    - <<: *test-cache
 
 Build:
   stage: build
-  tags:
-    - minio
-  cache:
-    - key:
-        files:
-          - yarn.lock
-      paths:
-        - node_modules
-      policy: pull
-    - key: build-$CI_JOB_IMAGE
-      paths:
-        - .cache
-        - public
-      policy: pull
   script:
     - yarn build
+  cache:
+    - <<: *node_modules-cache
+    - <<: *build-cache
   artifacts:
     paths:
       - public
