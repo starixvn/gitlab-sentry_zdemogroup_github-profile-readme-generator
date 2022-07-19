@@ -1,14 +1,3 @@
-stages:
-  - install_deps
-  - test
-  - build
-  - package
-
-default:
-  image: hub.nexdev.net/base/node:lts ###node:lts
-  before_script:
-    - yarn install
-
 # Caches
 .node_modules-cache: &node_modules-cache
   key:
@@ -35,6 +24,17 @@ default:
       - .cache
       - public
   policy: pull-push
+################
+stages:
+  - install_deps
+  - test
+  - build
+  - package
+
+default:
+  image: hub.nexdev.net/base/node:lts ###node:lts
+  before_script:
+    - yarn install
 
 # Jobs
 Install Dependencies:
