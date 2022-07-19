@@ -1,3 +1,14 @@
+stages:
+  - install_deps
+  - test
+  - build
+  - package
+
+default:
+  image: hub.nexdev.net/base/node:lts ###node:lts
+  before_script:
+    - yarn install
+
 # Caches
 .node_modules-cache: &node_modules-cache
   key:
@@ -53,3 +64,17 @@ Build:
   artifacts:
     paths:
       - public
+
+Docker Build:
+  before_script:
+    # to skip default before_script##
+    - docker info
+    - docker login -u $DOCKER_REG_LOCAL_USERNAME -p $DOCKER_REG_LOCAL_PASSWORD $DOCKER_REG_LOCAL_URL
+
+  stage: package
+  image: hub.nexdev.net/base/docker:20.10.7-bash #docker:stable
+  tags:
+    - minio
+  script:
+    - docker build -t $DOCKER_REG_LOCAL_URL/base/gprg:latest .
+    - docker push $DOCKER_REG_LOCAL_URL/base/gprg:latest
